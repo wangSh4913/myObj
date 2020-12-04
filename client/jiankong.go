@@ -37,6 +37,7 @@ func main() {
 	defer fileW.Close()
 	//读取文件
 	reader := bufio.NewReader(fileR)
+	runtime.GOMAXPROCS(2)
 	for {
 		line, err := reader.ReadString('\n')
 		if err == io.EOF {
