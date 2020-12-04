@@ -58,7 +58,7 @@ func main() {
 	wg.Wait()
 	fmt.Println(len(resMap))
 	for k, v := range resMap {
-		res := k + "  " + strconv.Itoa(v) + "\n"
+		res := k + "  " + strconv.Itoa(v) + "\r\n"
 		writer.WriteString(res)
 	}
 	writer.Flush()
@@ -68,11 +68,7 @@ func main() {
 func link(url string) {
 	defer wg.Done()
 
-	if strings.HasPrefix(url, "https://") {
-		url = strings.TrimLeft(url, "https://")
-		url = "http://" + url
-	}
-	if !strings.HasPrefix(url, "http://") {
+	if !strings.HasPrefix(url, "http://") || !strings.HasPrefix(url, "https://") {
 		url = "http://" + url
 	}
 
