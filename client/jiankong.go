@@ -68,7 +68,7 @@ func main() {
 func link(url string) {
 	defer wg.Done()
 
-	if !strings.HasPrefix(url, "http://") || !strings.HasPrefix(url, "https://") {
+	if !strings.HasPrefix(url, "http://") && !strings.HasPrefix(url, "https://") {
 		url = "http://" + url
 	}
 
