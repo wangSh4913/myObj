@@ -14,7 +14,7 @@ import (
 )
 
 var wg sync.WaitGroup
-var resMap = make(map[int]map[string]int, 1024)
+var resMap = make(map[string]map[string]int, 1024)
 
 func main() {
 	if len(os.Args) != 2 {
@@ -52,20 +52,19 @@ func main() {
 		if len(url) == 0 {
 			continue
 		}
-		fmt.Printf("url is:%#v\n", url)
+		//fmt.Printf("url is:%#v\n", url)
 		res := strings.Split(url, " ")
-		id, _ := strconv.ParseInt(res[0], 10, 64)
+		name := res[0]
 		url = res[1]
-		fmt.Println("###############",id, url)
 		//链接输出，写到文件里
 		wg.Add(1)
-		go link(int(id), url)
+		go link(name, url)
 	}
 	wg.Wait()
 	fmt.Println(len(resMap))
-	for id, m := range resMap {
+	for name, m := range resMap {
 		for url, retCode := range m{
-			res := strconv.Itoa(id) + "  " + url + "  " + strconv.Itoa(retCode) + "\r\n"
+			res := name + "  " + url + "  " + strconv.Itoa(retCode) + "\r\n"
 			writer.WriteString(res)
 		}
 	}
@@ -73,7 +72,7 @@ func main() {
 }
 
 //尝试链接
-func link(id int,url string) {
+func link(name string,url string) {
 	defer wg.Done()
 
 	tmp := make(map[string]int,1)
@@ -87,13 +86,13 @@ func link(id int,url string) {
 	if err != nil {
 		fmt.Println(err)
 		tmp[url] = -1
-		resMap[id] = tmp
+		resMap[name] = tmp
 		return
 	}
 	if resp.StatusCode != 200 {
-		fmt.Printf("链接异常, url is:%s, statusCode is : %d, errInfo is :%s", url, resp.StatusCode, err)
+		//fmt.Printf("链接异常, url is:%s, statusCode is : %d, errInfo is :%s", url, resp.StatusCode, err)
 		tmp[url] = resp.StatusCode
-		resMap[id] = tmp
+		resMap[name] = tmp
 	}
 	return
 }
