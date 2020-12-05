@@ -39,6 +39,7 @@ func main() {
 	//读取文件
 	reader := bufio.NewReader(fileR)
 	runtime.GOMAXPROCS(2)
+	i := 0
 	for {
 		line, err := reader.ReadString('\n')
 		if err == io.EOF {
@@ -59,6 +60,11 @@ func main() {
 		//链接输出，写到文件里
 		wg.Add(1)
 		go link(name, url)
+		i += 1
+		if i > 500 {
+			time.Sleep(10 * time.Second)
+			i = 0
+		}
 	}
 	wg.Wait()
 	fmt.Println(len(resMap))
@@ -89,10 +95,12 @@ func link(name string,url string) {
 		resMap[name] = tmp
 		return
 	}
+	defer resp.Body.Close()
 	if resp.StatusCode != 200 {
 		//fmt.Printf("链接异常, url is:%s, statusCode is : %d, errInfo is :%s", url, resp.StatusCode, err)
 		tmp[url] = resp.StatusCode
 		resMap[name] = tmp
 	}
+
 	return
 }
