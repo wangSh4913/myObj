@@ -62,19 +62,20 @@ func main() {
 		go link(name, url)
 		i += 1
 		if i > 500 {
+			fmt.Println(len(resMap))
+			for name, m := range resMap {
+				for url, retCode := range m{
+					res := name + "  " + url + "  " + strconv.Itoa(retCode) + "\r\n"
+					writer.WriteString(res)
+					delete(resMap, name)
+				}
+			}
+			writer.Flush()
 			time.Sleep(10 * time.Second)
 			i = 0
 		}
 	}
 	wg.Wait()
-	fmt.Println(len(resMap))
-	for name, m := range resMap {
-		for url, retCode := range m{
-			res := name + "  " + url + "  " + strconv.Itoa(retCode) + "\r\n"
-			writer.WriteString(res)
-		}
-	}
-	writer.Flush()
 }
 
 //尝试链接
