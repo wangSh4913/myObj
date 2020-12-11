@@ -1,0 +1,29 @@
+﻿打开go module：
+set GO111MODULE=on
+
+Go 1.11之后设置GOPROXY命令为：
+set GOPROXY=https://goproxy.cn
+
+Go 1.13之后，GOPROXY默认值为https://proxy.golang.org在国内是无法访问的，所以建议设置为：
+set GOPROXY=https://goproxy.cn,direct
+go env -w GOPROXY=https://goproxy.cn,direct
+
+kafka安装部署：
+https://docs.qq.com/blankpage/DTmdldEJJVGtTRkFi
+kafka下载：
+http://kafka.apache.org/downloads
+zookeeper启动：
+windows： zookeeper-server-start.bat  config\zookeeper.properties
+kafka启动：
+windows： kafka-server-start.bat  config\server.properties
+kafka启动一个windows终端消费者：
+kafka-console-consumer.bat --bootstarp-server=127.0.0.1:9092 --topic=web_log --from-beginning
+
+读配置文件：
+go get gopkg.in/ini.v1
+
+logAgent工作流程：
+1）读日志文件  使用tail模块  go get github.com/hpcloud/tail
+2）写日志     使用sarama模块v1.19版本  github.com/Shopify/sarama v1.19
+           可在go.mod中写require (github.com/Shopify/sarama v1.19），然后使用go mod download自动下载
+
